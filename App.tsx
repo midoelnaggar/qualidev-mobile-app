@@ -1,20 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import FontProvider from "./src/Providers/FontProvider";
+import StoreProvider from "./src/Providers/StoreProvider";
+import AppNavigator from "./src/Navigators/AppNavigator";
+import BottomSheetProvider from "./src/Providers/BottomSheetProvider";
+
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <FontProvider>
+      <StoreProvider>
+        <BottomSheetProvider>
+        <AppNavigator />
+        </BottomSheetProvider>
+      </StoreProvider>
+    </FontProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
