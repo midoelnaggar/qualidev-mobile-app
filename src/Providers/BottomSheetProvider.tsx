@@ -1,12 +1,15 @@
 import { PropsWithChildren } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, closeBottomSheet } from "../Store";
 import { BottomSheet } from "@rneui/base";
 import { colors } from "../helpers/theme";
+import CloseIcon from "../Components/UI/Icons/CloseIcon";
 
 export default function BottomSheetProvider({ children }: PropsWithChildren) {
-  const { open } = useSelector((state: RootState) => state.bottomSheet);
+  const { open, component } = useSelector(
+    (state: RootState) => state.bottomSheet
+  );
 
   const dispatch = useDispatch();
 
@@ -23,7 +26,10 @@ export default function BottomSheetProvider({ children }: PropsWithChildren) {
         onBackdropPress={handleClose}
       >
         <View style={styles.container}>
-          <Text>Style</Text>
+          <Pressable style={styles.closeContainer} onPress={handleClose}>
+            <CloseIcon />
+          </Pressable>
+          {component}
         </View>
       </BottomSheet>
     </>
@@ -33,6 +39,15 @@ export default function BottomSheetProvider({ children }: PropsWithChildren) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.bg1,
-    height:500
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeContainer: {
+    width: 31,
+    height: 31,
+    alignSelf: "flex-end",
   },
 });

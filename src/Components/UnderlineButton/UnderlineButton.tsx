@@ -5,18 +5,16 @@ import { colors } from "../../helpers/theme";
 
 const { fontScale } = Dimensions.get("window");
 
-export default function MainButton({
+export default function UnderlineButton({
   text,
   action,
-  disabled
 }: {
   text?: string;
   action?: ()=>void;
-  disabled?:boolean
 }) {
 
   return (
-    <TouchableHighlight style={{...styles.button,backgroundColor:disabled?colors.tx3:colors.c1}} onPress={action} disabled={disabled}>
+    <TouchableHighlight style={styles.button} onPress={action}>
       <Text style={styles.text}>{text}</Text>
     </TouchableHighlight>
   );
@@ -24,15 +22,15 @@ export default function MainButton({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 17,
-    borderRadius: 10,
+    paddingVertical: 7,
     width: "100%",
     alignItems: "center",
   },
   text: {
-    color: colors.tx4,
+    color: colors.tx1,
     fontSize: fontScale * 18,
     lineHeight: fontScale * 18,
     fontFamily: "ma400",
+    textDecorationLine:"underline"
   },
 });

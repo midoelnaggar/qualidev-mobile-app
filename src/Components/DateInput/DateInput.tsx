@@ -58,18 +58,20 @@ const styles = StyleSheet.create({
     borderColor: colors.bo,
     borderWidth: 1,
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 16,
     borderRadius: 10,
   },
   placeholder: {
     color: colors.tx3,
-    fontSize: fontScale * 14,
+    fontSize: fontScale * 16,
     fontFamily: "ma400",
+    letterSpacing: 1,
   },
   value: {
     color: colors.tx2,
-    fontSize: fontScale * 14,
+    fontSize: fontScale * 16,
     fontFamily: "ma400",
+    letterSpacing: 1.2,
   },
 });
 

@@ -4,7 +4,7 @@ import { persistReducer, persistStore, PERSIST } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bookingSlice from "./slices/bookingSlice";
 import dateSlice from "./slices/dateSlice";
-import bottomSheetSlice from "./slices/bottomSheet";
+import bottomSheetSlice from "./slices/bottomSheetSlice";
 
 const persistedReducer = persistReducer(
     {
