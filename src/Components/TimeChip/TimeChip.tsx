@@ -6,19 +6,20 @@ import { colors } from "../../helpers/theme";
 interface Props {
   selected?: boolean;
   time?: string;
-  action: () => void;
+  disabled?: boolean;
+  action?: () => void;
 }
 
 const { fontScale } = Dimensions.get("window");
 
-const TimeChip: FC<Props> = ({ selected, time, action }) => {
+const TimeChip: FC<Props> = ({ selected, time, action, disabled }) => {
   return (
     <TouchableHighlight
       style={{
         ...styles.chip,
-        backgroundColor: selected ? colors.c1 : colors.bg1,
+        backgroundColor: disabled ?"#d3d3d3" :selected ? colors.c1 : colors.bg1,
       }}
-      onPress={action}
+      onPress={() => action && !disabled && action()}
     >
       <Text
         style={{ ...styles.text, color: selected ? colors.tx4 : colors.tx2 }}
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     borderColor: colors.bo,
     borderWidth: 2,
     borderRadius: 25,
+    alignSelf: "flex-start",
   },
   text: {
     fontFamily: "ma400",

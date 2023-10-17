@@ -45,6 +45,7 @@ const DateInput: FC<Props> = ({ Icon, placeholder }) => {
         accentColor={colors.c1}
         textColor={colors.c1}
         isVisible={date.open}
+        minimumDate={moment().toDate()}
       />
     </Pressable>
   );

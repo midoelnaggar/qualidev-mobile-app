@@ -36,6 +36,7 @@ export type RootState = ReturnType<typeof persistedReducer>
 export const persistor = persistStore(store);
 
 export const { openDateModal, closeDateModal, setDate } = dateSlice.actions;
+export const { setBooking,cancelBooking } = bookingSlice.actions;
 export const { openBottomSheet, closeBottomSheet } = bottomSheetSlice.actions;
 
 export default store;

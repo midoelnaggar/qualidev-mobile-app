@@ -6,7 +6,7 @@ import Title from "../Title/Title";
 import SubTitle from "../SubTitle/SubTitle";
 import MainButton from "../MainButton/MainButton";
 
-export default function BookedSuccesfully() {
+export default function BookedSuccesfully({action}:{action:()=>void}) {
   const dispatch = useDispatch();
   return (
     <View style={styles.container}>
@@ -29,7 +29,7 @@ export default function BookedSuccesfully() {
         </SubTitle>
       </View>
       <View style={styles.actions}>
-      <MainButton text="Go To My Booking" />
+      <MainButton text="Go To My Booking" action={()=>{dispatch(closeBottomSheet());action();}} />
       </View>
     </View>
   );

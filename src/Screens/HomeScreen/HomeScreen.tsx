@@ -10,22 +10,47 @@ import UserIcon from "../../Components/UI/Icons/UserIcon";
 import DateInput from "../../Components/DateInput/DateInput";
 import CalenderIcon from "../../Components/UI/Icons/CalenderIcon";
 import MainButton from "../../Components/MainButton/MainButton";
-import { useDispatch } from "react-redux";
-import { openBottomSheet } from "../../Store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, openBottomSheet, setBooking } from "../../Store";
 import BookedSuccesfully from "../../Components/BookedSuccesfully/BookedSuccesfully";
 import UnderlineButton from "../../Components/UnderlineButton/UnderlineButton";
 import timesData from "../../data/timesData";
 import TimeChip from "../../Components/TimeChip/TimeChip";
+import { RootStackParamList } from "../../Navigators/AppNavigator";
+import { StackScreenProps } from "@react-navigation/stack";
+import moment from "moment";
 
-export default function HomeScreen() {
+export default function HomeScreen({
+  navigation,
+}: StackScreenProps<RootStackParamList>) {
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
-  const [name, setName] = useState<string | null>(null);
-  const [phone, setPhone] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string >("");
+
+  const date = useSelector((state: RootState) => state.date);
+  const { bookingInfo } = useSelector((state: RootState) => state.booking);
 
   const dispatch = useDispatch();
 
   const handleBook = () => {
-    dispatch(openBottomSheet(<BookedSuccesfully />));
+    dispatch(
+      setBooking({
+        date: moment(date.value).format("DD/MM/YYYY"),
+        time: timesData[selectedTime || 0],
+        doctor: {
+          name: "Name Doctor",
+          about:
+            "Lorem ipsum dolor sit amet consectetur. Varius turpis sed aliquam erat diam nisi diam vestibulum lobortis. Molestie sed auctor pretium ..",
+          position: "Doctor of Dentist",
+        },
+        location: "Egypt, Cairo.",
+      })
+    );
+    dispatch(openBottomSheet(<BookedSuccesfully action={handleViewBooking} />));
+  };
+
+  const handleViewBooking = () => {
+    navigation.push("Booking");
   };
 
   return (
@@ -46,14 +71,14 @@ export default function HomeScreen() {
             Icon={PhoneIcon}
             placeholder="Enter your phone number"
             value={phone}
-            onChange={(e) => setPhone(e.target?.value || null)}
+            onChange={(e: any) => setPhone(e.target?.value || null)}
           />
           <Input
             inputMode="text"
             Icon={UserIcon}
             placeholder="Your Name"
             value={name}
-            onChange={(e) => setName(e.target?.value || null)}
+            onChange={(e: any) => setName(e.target?.value || null)}
           />
         </View>
         <View style={styles.timeSelect}>
@@ -68,6 +93,7 @@ export default function HomeScreen() {
                 action={() => setSelectedTime(index)}
                 selected={selectedTime == index}
                 key={index}
+                disabled={moment(`${time} ${moment(date.value).format("DD/MM/YYYY")}`, "hh:mma DD/MM/YYYY").isBefore()}
               />
             );
           })}
@@ -77,9 +103,11 @@ export default function HomeScreen() {
         <MainButton
           text="Book"
           action={handleBook}
-          disabled={selectedTime != null ? false : true}
+          disabled={(name == "" || phone == "" || selectedTime == null) ? true : false}
         />
-        <UnderlineButton text="View My Booking" action={handleBook} />
+        {bookingInfo ? (
+          <UnderlineButton text="View My Booking" action={handleViewBooking} />
+        ) : null}
       </View>
     </DefaultLayout>
   );

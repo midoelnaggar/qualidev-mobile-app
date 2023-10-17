@@ -1,36 +1,40 @@
-import { Text, StyleSheet, Dimensions, Pressable } from "react-native";
+import { Text, StyleSheet, Dimensions, TouchableHighlight } from "react-native";
 import React from "react";
 import { colors } from "../../helpers/theme";
 
 
 const { fontScale } = Dimensions.get("window");
 
-export default function UnderlineButton({
+export default function MainButton({
   text,
   action,
+  disabled
 }: {
   text?: string;
   action?: ()=>void;
+  disabled?:boolean
 }) {
 
   return (
-    <Pressable style={styles.button} onPress={action}>
+    <TouchableHighlight style={{...styles.button,backgroundColor:disabled?colors.tx3:colors.bg1}} onPress={action} disabled={disabled}>
       <Text style={styles.text}>{text}</Text>
-    </Pressable>
+    </TouchableHighlight>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 7,
+    paddingVertical: 17,
+    borderRadius: 10,
     width: "100%",
     alignItems: "center",
+    borderWidth:1,
+    borderColor:colors.c1
   },
   text: {
-    color: colors.tx1,
+    color: colors.c1,
     fontSize: fontScale * 18,
     lineHeight: fontScale * 18,
     fontFamily: "ma400",
-    textDecorationLine:"underline"
   },
 });

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface StateType {
     loading: boolean
-    bookings: Booking[]
+    bookingInfo: Booking | null
 }
 
 interface Booking {
@@ -18,7 +18,7 @@ interface Booking {
 
 const initialState: StateType = {
     loading: false,
-    bookings: []
+    bookingInfo: null
 }
 
 
@@ -26,8 +26,11 @@ const bookingSlice = createSlice({
     name: "booking",
     initialState,
     reducers: {
-        addBooking: (state, { payload }) => {
-            state.bookings.push(payload)
+        setBooking: (state, { payload }: { payload: Booking }) => {
+            state.bookingInfo = payload
+        },
+        cancelBooking: (state) => {
+            state.bookingInfo = null
         }
     }
 })
