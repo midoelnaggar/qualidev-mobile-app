@@ -6,23 +6,29 @@ import bookingSlice from "./slices/bookingSlice";
 import dateSlice from "./slices/dateSlice";
 import bottomSheetSlice from "./slices/bottomSheetSlice";
 
-const persistedReducer = persistReducer(
-    {
-        key: "ROOT_APP_KEY",
-        version: 1,
-        storage: AsyncStorage,
-        whitelist: ["booking"],
-        blacklist: ["date", "bottomSheet"],
-    },
-    combineReducers({
-        booking: bookingSlice.reducer,
-        date: dateSlice.reducer,
-        bottomSheet: bottomSheetSlice.reducer,
-    })
-);
+// const persistedReducer = persistReducer(
+//     {
+//         key: "ROOT_APP_KEY",
+//         version: 1,
+//         storage: AsyncStorage,
+//         whitelist: ["booking"],
+//         blacklist: ["date", "bottomSheet"],
+//     },
+//     combineReducers({
+//         booking: bookingSlice.reducer,
+//         date: dateSlice.reducer,
+//         bottomSheet: bottomSheetSlice.reducer,
+//     })
+// );
+
+const reducer =  {
+    booking: bookingSlice.reducer,
+    date: dateSlice.reducer,
+    bottomSheet: bottomSheetSlice.reducer,
+}
 
 const store = configureStore({
-    reducer: persistedReducer,
+    reducer,
     devTools: true,
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware({
@@ -31,12 +37,12 @@ const store = configureStore({
     },
 });
 
-export type RootState = ReturnType<typeof persistedReducer>
+export type RootState = ReturnType<typeof reducer>
 
 export const persistor = persistStore(store);
 
 export const { openDateModal, closeDateModal, setDate } = dateSlice.actions;
-export const { setBooking,cancelBooking } = bookingSlice.actions;
+export const { setBooking, cancelBooking } = bookingSlice.actions;
 export const { openBottomSheet, closeBottomSheet } = bottomSheetSlice.actions;
 
 export default store;

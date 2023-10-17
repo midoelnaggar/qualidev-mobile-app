@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -29,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "0d950b82-0137-483f-a818-f61d5b69277b"
+        "projectId": "8930eabd-7a37-4417-a080-4b74588b2ac1"
       }
     }
   }
