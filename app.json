@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "qualidev-mobile-app",
+    "name": "Qualidev",
     "slug": "qualidev-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -30,7 +30,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "8930eabd-7a37-4417-a080-4b74588b2ac1"
+        "projectId": "0d950b82-0137-483f-a818-f61d5b69277b"
       }
     }
   }
