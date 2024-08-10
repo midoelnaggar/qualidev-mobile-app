@@ -2,21 +2,26 @@ import { Text, StyleSheet, Dimensions, TouchableHighlight } from "react-native";
 import React from "react";
 import { colors } from "../../helpers/theme";
 
-
 const { fontScale } = Dimensions.get("window");
 
 export default function MainButton({
   text,
   action,
-  disabled
+  disabled,
 }: {
   text?: string;
-  action?: ()=>void;
-  disabled?:boolean
+  action?: () => void;
+  disabled?: boolean;
 }) {
-
   return (
-    <TouchableHighlight style={{...styles.button,backgroundColor:disabled?colors.tx3:colors.c1}} onPress={action} disabled={disabled}>
+    <TouchableHighlight
+      style={{
+        ...styles.button,
+        backgroundColor: disabled ? colors.tx3 : colors.c1,
+      }}
+      onPress={action}
+      disabled={disabled}
+    >
       <Text style={styles.text}>{text}</Text>
     </TouchableHighlight>
   );
@@ -34,5 +39,6 @@ const styles = StyleSheet.create({
     fontSize: fontScale * 18,
     lineHeight: fontScale * 18,
     fontFamily: "ma400",
+    textTransform: "capitalize",
   },
 });

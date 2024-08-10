@@ -3,6 +3,9 @@
     "preview": {
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://tips.talkstent.com"
       }
     },
     "preview2": {
@@ -13,6 +16,13 @@
     "preview3": {
       "developmentClient": true
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://tips.talkstent.com"
+      }
+    }
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
   }
 }

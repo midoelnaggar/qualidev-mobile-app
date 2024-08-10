@@ -1,23 +1,48 @@
 import { ComponentType, FC } from "react";
-import { Dimensions, InputModeOptions, NativeSyntheticEvent, StyleSheet, TextInput, TextInputChangeEventData, View } from "react-native";
+import {
+  Dimensions,
+  InputModeOptions,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 import { SvgProps } from "react-native-svg";
 import { colors } from "../../helpers/theme";
 
 interface Props {
   Icon?: ComponentType<SvgProps>;
   placeholder?: string;
-  inputMode?:InputModeOptions;
-  onChange:(e: NativeSyntheticEvent<TextInputChangeEventData>)=>void;
-  value:any
+  inputMode?: InputModeOptions;
+  onChangeText: (e: string) => void;
+  value: any;
+  password?: boolean;
+  readOnly?: boolean;
 }
 
-const { fontScale } = Dimensions.get("window")
+const { fontScale } = Dimensions.get("window");
 
-const Input: FC<Props> = ({ Icon, placeholder,inputMode,onChange,value }) => {
+const Input: FC<Props> = ({
+  Icon,
+  placeholder,
+  inputMode,
+  onChangeText,
+  value,
+  password,
+  readOnly,
+}) => {
   return (
     <View style={styles.container}>
       {Icon ? <Icon /> : null}
-      <TextInput inputMode={inputMode} placeholder={placeholder} style={styles.input} onChange={onChange} value={value}/>
+      <TextInput
+        secureTextEntry={password}
+        inputMode={inputMode}
+        placeholder={placeholder}
+        style={styles.input}
+        onChangeText={onChangeText}
+        value={value}
+        //@ts-ignore
+        readOnly={readOnly}
+      />
     </View>
   );
 };
@@ -35,9 +60,8 @@ const styles = StyleSheet.create({
   },
   input: {
     color: colors.tx2,
-    fontSize:fontScale*14,
-    fontFamily:"ma400"
-
+    fontSize: fontScale * 14,
+    fontFamily: "ma400",
   },
 });
 

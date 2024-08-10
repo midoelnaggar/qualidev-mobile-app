@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface StateType {
+interface IInitialState {
     loading: boolean
     bookingInfo: Booking | null
 }
@@ -16,7 +16,7 @@ interface Booking {
     location: string
 }
 
-const initialState: StateType = {
+const initialState: IInitialState = {
     loading: false,
     bookingInfo: null
 }
