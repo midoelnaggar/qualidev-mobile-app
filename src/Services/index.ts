@@ -5,4 +5,4 @@ export const apiUrls = {
     login: "/Accounts/login",
 }
 
-export const axios = Axios.create({ baseURL: process.env.EXPO_PUBLIC_API_URL || "http://q.microclouddevelopment.com/api" })
+export const axios = Axios.create({ baseURL: process.env.EXPO_PUBLIC_API_URL || "https://q.microclouddevelopment.com/api" })

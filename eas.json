@@ -5,7 +5,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://tips.talkstent.com"
+        "EXPO_PUBLIC_API_URL": "https://q.microclouddevelopment.com/api"
       }
     },
     "preview2": {
@@ -18,7 +18,7 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://tips.talkstent.com"
+        "EXPO_PUBLIC_API_URL": "https://q.microclouddevelopment.com/api"
       }
     }
   },
