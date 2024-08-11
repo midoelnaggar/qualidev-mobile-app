@@ -1,4 +1,11 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "../../Layouts/DefaultLayout";
 import Logo from "../../Components/Logo/Logo";
@@ -11,13 +18,7 @@ import DateInput from "../../Components/DateInput/DateInput";
 import CalenderIcon from "../../Components/UI/Icons/CalenderIcon";
 import MainButton from "../../Components/MainButton/MainButton";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AppDispatch,
-  RootState,
-  loguout,
-  openBottomSheet,
-  setBooking,
-} from "../../Store";
+import { AppDispatch, RootState, loguout, openBottomSheet } from "../../Store";
 import BookedSuccesfully from "../../Components/BookedSuccesfully/BookedSuccesfully";
 import UnderlineButton from "../../Components/UnderlineButton/UnderlineButton";
 import timesData from "../../data/timesData";
@@ -29,6 +30,8 @@ import PasswordIcon from "../../Components/UI/Icons/PasswordIcon";
 import { colors } from "../../helpers/theme";
 import { loginThunk, registerThunk } from "../../Store/thunks/userThunks";
 import SecondaryButton from "../../Components/SecondaryButton/SecondaryButton";
+import { getSlotsThunk } from "../../Store/thunks/bookingThunks";
+import { setBooking } from "../../Store/slices/bookingSlice";
 
 export default function HomeScreen({
   navigation,
@@ -40,6 +43,9 @@ export default function HomeScreen({
   const [authType, setAuthType] = useState<"login" | "register">("login");
 
   const { loading, data: user } = useSelector((state: RootState) => state.user);
+  const { loading: bookingLoading, slots } = useSelector(
+    (state: RootState) => state.booking
+  );
 
   const date = useSelector((state: RootState) => state.date);
   const { bookingInfo } = useSelector((state: RootState) => state.booking);
@@ -84,6 +90,12 @@ export default function HomeScreen({
     }
   };
 
+  useEffect(() => {
+    dispatch(
+      getSlotsThunk({ clinic_id: 4, doctor_id: 1, slot_date: date.value })
+    );
+  }, [date]);
+
   const handleLogout = () => {
     dispatch(loguout());
     setName("");
@@ -92,10 +104,6 @@ export default function HomeScreen({
     setAuthType("login");
     setSelectedTime(null);
   };
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <DefaultLayout>
@@ -186,20 +194,37 @@ export default function HomeScreen({
           <DateInput Icon={CalenderIcon} />
         </View>
         <View style={styles.times}>
-          {timesData?.map((time, index) => {
-            return (
-              <TimeChip
-                time={time}
-                action={() => setSelectedTime(index)}
-                selected={selectedTime == index}
-                key={index}
-                disabled={moment(
-                  `${time} ${moment(date.value).format("DD/MM/YYYY")}`,
-                  "hh:mma DD/MM/YYYY"
-                ).isBefore()}
-              />
-            );
-          })}
+          {bookingLoading ? (
+            <ActivityIndicator color={colors.c1} />
+          ) : slots.length ? (
+            slots.map(({ slotStartTime }, index) => {
+              return (
+                <TimeChip
+                  time={moment(
+                    `${slotStartTime} ${moment(date.value).format(
+                      "DD/MM/YYYY"
+                    )}`,
+                    "hh:mm DD/MM/YYYY"
+                  ).format("hh:mm a")}
+                  action={() => setSelectedTime(index)}
+                  selected={selectedTime == index}
+                  key={index}
+                  disabled={moment(
+                    `${slotStartTime} ${moment(date.value).format(
+                      "DD/MM/YYYY"
+                    )}`,
+                    "hh:mm DD/MM/YYYY"
+                  ).isBefore()}
+                />
+              );
+            })
+          ) : (
+            <Text
+              style={{ fontFamily: "ma400", fontSize: 16, textAlign: "center" }}
+            >
+              No time slots available for the selected date
+            </Text>
+          )}
         </View>
       </ScrollView>
       {user.id ? (

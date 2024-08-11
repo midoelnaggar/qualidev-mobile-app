@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "../../Layouts/DefaultLayout";
 import MainButton from "../../Components/MainButton/MainButton";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, cancelBooking, openBottomSheet } from "../../Store";
+import { RootState, openBottomSheet } from "../../Store";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../Navigators/AppNavigator";
 import BackIcon from "../../Components/UI/Icons/BackIcon";
@@ -22,6 +22,7 @@ import SubTitle from "../../Components/SubTitle/SubTitle";
 import moment from "moment";
 import TimeChip from "../../Components/TimeChip/TimeChip";
 import CancelConfirmation from "../../Components/CancelConfirmation/CancelConfirmation";
+import { cancelBooking } from "../../Store/slices/bookingSlice";
 
 const { fontScale } = Dimensions.get("window");
 

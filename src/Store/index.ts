@@ -6,6 +6,7 @@ import bookingSlice from "./slices/bookingSlice";
 import dateSlice from "./slices/dateSlice";
 import bottomSheetSlice from "./slices/bottomSheetSlice";
 import userSlice from "./slices/userSlice";
+import alertSlice from "./slices/alertSlice";
 
 const persistedReducer = persistReducer(
     {
@@ -13,7 +14,7 @@ const persistedReducer = persistReducer(
         version: 1,
         storage: AsyncStorage,
         whitelist: ["booking"],
-        blacklist: ["date", "bottomSheet", "user"],
+        blacklist: ["date", "bottomSheet", "user", "alert"],
     },
     combineReducers({
         booking: bookingSlice.reducer,
@@ -23,7 +24,8 @@ const persistedReducer = persistReducer(
             key: "user",
             storage: AsyncStorage,
             blacklist: ["loading"]
-        }, userSlice.reducer)
+        }, userSlice.reducer),
+        alert: alertSlice.reducer,
     })
 );
 
@@ -43,7 +45,6 @@ export type AppDispatch = typeof store.dispatch;
 export const persistor = persistStore(store);
 
 export const { openDateModal, closeDateModal, setDate } = dateSlice.actions;
-export const { setBooking, cancelBooking } = bookingSlice.actions;
 export const { openBottomSheet, closeBottomSheet } = bottomSheetSlice.actions;
 export const { loguout } = userSlice.actions;
 
