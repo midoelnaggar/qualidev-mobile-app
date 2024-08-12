@@ -17,7 +17,11 @@ const TimeChip: FC<Props> = ({ selected, time, action, disabled }) => {
     <TouchableHighlight
       style={{
         ...styles.chip,
-        backgroundColor: disabled ?"#d3d3d3" :selected ? colors.c1 : colors.bg1,
+        backgroundColor: disabled
+          ? "#d3d3d3"
+          : selected
+          ? colors.c1
+          : colors.bg1,
       }}
       onPress={() => action && !disabled && action()}
     >

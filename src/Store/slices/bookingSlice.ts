@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getSlotsThunk } from "../thunks/bookingThunks";
+import { addBookingThunk, getBookingsThunk, getSlotsThunk } from "../thunks/bookingThunks";
 import moment from "moment";
 
 interface IInitialState {
     loading: boolean
-    bookingInfo: IBooking | null
+    bookings: IBooking[]
     slots: ISlot[]
 }
 
 const initialState: IInitialState = {
     loading: false,
-    bookingInfo: null,
+    bookings: [],
     slots: []
 }
 
@@ -19,12 +19,6 @@ const bookingSlice = createSlice({
     name: "booking",
     initialState,
     reducers: {
-        setBooking: (state, { payload }: { payload: IBooking }) => {
-            state.bookingInfo = payload
-        },
-        cancelBooking: (state) => {
-            state.bookingInfo = null
-        },
         clearSlots: (state) => {
             state.slots = []
             return state
@@ -35,8 +29,7 @@ const bookingSlice = createSlice({
             state.loading = true
         });
         builder.addCase(getSlotsThunk.fulfilled, (state, { payload }) => {
-            state.slots = payload?.data;
-            state.slots.sort((a: any, b: any) => Number(moment(
+            state.slots = payload?.data?.length ? [...payload.data].sort((a, b) => Number(moment(
                 `${a.slotStartTime} ${moment().format(
                     "DD/MM/YYYY"
                 )}`,
@@ -46,15 +39,37 @@ const bookingSlice = createSlice({
                     "DD/MM/YYYY"
                 )}`,
                 "hh:mm DD/MM/YYYY"
-            ).toDate()))
+            ).toDate())) : []
             state.loading = false;
             return state
         });
         builder.addCase(getSlotsThunk.rejected, (state) => {
             state.loading = false
         });
+        ////
+        builder.addCase(getBookingsThunk.pending, (state) => {
+            state.loading = true
+        });
+        builder.addCase(getBookingsThunk.fulfilled, (state, { payload }) => {
+            state.bookings = payload?.data?.reservation?.length ? [...payload.data.reservation].sort((a, b) => Number(moment(
+                `${a.slotStartTime} ${moment().format(
+                    "DD/MM/YYYY"
+                )}`,
+                "hh:mm DD/MM/YYYY"
+            ).toDate()) - Number(moment(
+                `${b.slotStartTime} ${moment().format(
+                    "DD/MM/YYYY"
+                )}`,
+                "hh:mm DD/MM/YYYY"
+            ).toDate())) : []
+            state.loading = false;
+            return state
+        });
+        builder.addCase(getBookingsThunk.rejected, (state) => {
+            state.loading = false
+        });
     },
 })
-export const { clearSlots, cancelBooking, setBooking } = bookingSlice.actions
+export const { clearSlots } = bookingSlice.actions
 
 export default bookingSlice 

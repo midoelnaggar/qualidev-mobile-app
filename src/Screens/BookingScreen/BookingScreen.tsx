@@ -22,7 +22,6 @@ import SubTitle from "../../Components/SubTitle/SubTitle";
 import moment from "moment";
 import TimeChip from "../../Components/TimeChip/TimeChip";
 import CancelConfirmation from "../../Components/CancelConfirmation/CancelConfirmation";
-import { cancelBooking } from "../../Store/slices/bookingSlice";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -30,19 +29,23 @@ export default function BookingScreen({
   navigation,
 }: StackScreenProps<RootStackParamList>) {
   const [counter, setCounter] = useState("");
-  const { bookingInfo } = useSelector((state: RootState) => state.booking);
+  const { bookings } = useSelector((state: RootState) => state.booking);
 
   const dispatch = useDispatch();
 
+  const bookingInfo = bookings[0];
+
   useEffect(() => {
-    if (!bookingInfo) {
+    if (!bookings?.length) {
       navigation.replace("Home");
     }
     const interval = setInterval(() => {
       const now = moment();
       const targetDate = moment(
-        `${bookingInfo?.time} ${bookingInfo?.date}`,
-        "hh:mma DD/MM/YYYY"
+        `${bookingInfo?.slotStartTime} ${moment(bookingInfo?.slotDate).format(
+          "DD/MM/YYYY"
+        )}`,
+        "hh:mm DD/MM/YYYY"
       );
       const duration = moment.duration(targetDate.diff(now));
 
@@ -66,14 +69,7 @@ export default function BookingScreen({
     };
   }, [bookingInfo]);
 
-  const handleCancelBook = () => {
-    // ;
-    dispatch(
-      openBottomSheet(
-        <CancelConfirmation action={() => dispatch(cancelBooking())} />
-      )
-    );
-  };
+  const handleCancelBook = () => {};
 
   return (
     <DefaultLayout>
@@ -88,7 +84,6 @@ export default function BookingScreen({
           <View style={styles.iconContainer}>
             <LocationIcon />
           </View>
-          <Text>{bookingInfo?.location}</Text>
           <Pressable>
             <Text style={styles.locationBtn}>View On Map</Text>
           </Pressable>
@@ -99,25 +94,29 @@ export default function BookingScreen({
             source={require("../../../assets/images/Doctor.png")}
           ></Image>
           <View style={styles.nameAndPosition}>
-            <Title>{bookingInfo?.doctor.name}</Title>
-            {bookingInfo ? (
-              <SubTitle>{bookingInfo.doctor.position}</SubTitle>
-            ) : null}
+            <Title>{bookingInfo?.doctorName}</Title>
+            {bookingInfo ? <SubTitle>{"!position"}</SubTitle> : null}
           </View>
           <View style={styles.about}>
             <Text style={styles.aboutTitle}>About the doctor</Text>
-            <Text style={styles.aboutDesc}>{bookingInfo?.doctor.about}</Text>
+            <Text style={styles.aboutDesc}>{"!about"}</Text>
           </View>
           <View style={styles.separator} />
           <View style={styles.myRegister}>
             <Text style={styles.myRegisterTitle}>My Register</Text>
             <Text style={styles.date}>
-              {moment(bookingInfo?.date, "DD/MM/YYYY").format(
-                "DD MMMM YYYY - dddd"
-              )}
+              {moment(bookingInfo?.slotDate).format("DD MMMM YYYY - dddd")}
             </Text>
             <View>
-              <TimeChip selected time={bookingInfo?.time}></TimeChip>
+              <TimeChip
+                selected
+                time={moment(
+                  `${bookingInfo.slotStartTime} ${moment().format(
+                    "DD/MM/YYYY"
+                  )}`,
+                  "hh:mm DD/MM/YYYY"
+                ).format("hh:mm a")}
+              ></TimeChip>
             </View>
           </View>
           <View style={styles.countdown}>

@@ -19,18 +19,46 @@ interface IGetSlotsPayload {
 }
 
 interface ISlot {
+    id: number;
     slotDate: string
     slotStartTime: string
     slotEndTime: string
 }
+interface IAddBookingPayload {
+    slot_id: number
+    patient_account_id: number
+    loc_long: string
+    loc_lat: string
+    note: string
+}
 
 interface IBooking {
-    doctor: {
-        name: string
-        position: string
-        about: string
-    }
-    date: string
-    time: string
-    location: string
+    id: number;
+    statusId: number;
+    locationLong: string;
+    locationLat: string;
+    estimatedTime: string;
+    notes: string;
+    accountId: number;
+    slotId: number;
+    slotDate: string;
+    slotStartTime: string;
+    slotEndTime: string;
+    doctorName: string;
+    patientName: string;
+    patientPhone: string;
 }
+
+interface IGetBookingsPayload {
+    page_size: number
+    page_num: number
+    year: number
+    month: number
+    patient_id: number
+}
+
+interface IAlertPayload {
+    alertType: AlertType
+    message: string
+}
+type AlertType = "error" | "warning" | "info" | "success" 

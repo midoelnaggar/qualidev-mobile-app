@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface IInitialState {
-    alertType: "error" | "warning" | "info" | "success" | null
+    alertType: AlertType | null
     message: string | null;
 }
 
@@ -16,7 +16,7 @@ const alertSlice = createSlice({
     name: "alert",
     initialState,
     reducers: {
-        setAlert(state, action) {
+        setAlert(state, action: { payload: IAlertPayload }) {
             state.alertType = action.payload.alertType;
             state.message = action.payload.message;
             return state

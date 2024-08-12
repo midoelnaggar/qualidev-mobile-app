@@ -30,8 +30,12 @@ import PasswordIcon from "../../Components/UI/Icons/PasswordIcon";
 import { colors } from "../../helpers/theme";
 import { loginThunk, registerThunk } from "../../Store/thunks/userThunks";
 import SecondaryButton from "../../Components/SecondaryButton/SecondaryButton";
-import { getSlotsThunk } from "../../Store/thunks/bookingThunks";
-import { setBooking } from "../../Store/slices/bookingSlice";
+import {
+  addBookingThunk,
+  getBookingsThunk,
+  getSlotsThunk,
+} from "../../Store/thunks/bookingThunks";
+import { setAlert } from "../../Store/slices/alertSlice";
 
 export default function HomeScreen({
   navigation,
@@ -43,30 +47,46 @@ export default function HomeScreen({
   const [authType, setAuthType] = useState<"login" | "register">("login");
 
   const { loading, data: user } = useSelector((state: RootState) => state.user);
-  const { loading: bookingLoading, slots } = useSelector(
-    (state: RootState) => state.booking
-  );
+  const {
+    loading: bookingLoading,
+    slots,
+    bookings,
+  } = useSelector((state: RootState) => state.booking);
 
   const date = useSelector((state: RootState) => state.date);
-  const { bookingInfo } = useSelector((state: RootState) => state.booking);
 
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleBook = () => {
+  const getBookings = () =>
     dispatch(
-      setBooking({
-        date: moment(date.value).format("DD/MM/YYYY"),
-        time: timesData[selectedTime || 0],
-        doctor: {
-          name: "Name Doctor",
-          about:
-            "Lorem ipsum dolor sit amet consectetur. Varius turpis sed aliquam erat diam nisi diam vestibulum lobortis. Molestie sed auctor pretium ..",
-          position: "Doctor of Dentist",
-        },
-        location: "Egypt, Cairo.",
+      getBookingsThunk({
+        month: moment().month() + 1,
+        year: moment().year(),
+        page_num: 0,
+        page_size: 1000,
+        patient_id: user.id,
       })
     );
-    dispatch(openBottomSheet(<BookedSuccesfully action={handleViewBooking} />));
+
+  useEffect(() => {
+    if (user?.id) {
+      getBookings();
+    }
+  }, [user?.id]);
+  const handleBook = async () => {
+    const res = await dispatch(
+      addBookingThunk({
+        slot_id: Number(selectedTime),
+        patient_account_id: user.id,
+        loc_lat: "-",
+        loc_long: "-",
+        note: "-",
+      })
+    );
+    if (res.meta.requestStatus === "fulfilled") {
+      dispatch(
+        openBottomSheet(<BookedSuccesfully action={handleViewBooking} />)
+      );
+    }
   };
 
   const handleViewBooking = () => {
@@ -104,6 +124,15 @@ export default function HomeScreen({
     setAuthType("login");
     setSelectedTime(null);
   };
+
+  const handleSelectTime = (id: number) =>
+    user.id
+      ? selectedTime == id
+        ? setSelectedTime(null)
+        : setSelectedTime(id)
+      : dispatch(
+          setAlert({ alertType: "info", message: "You have to login first" })
+        );
 
   return (
     <DefaultLayout>
@@ -197,7 +226,7 @@ export default function HomeScreen({
           {bookingLoading ? (
             <ActivityIndicator color={colors.c1} />
           ) : slots.length ? (
-            slots.map(({ slotStartTime }, index) => {
+            slots.map(({ id, slotStartTime }) => {
               return (
                 <TimeChip
                   time={moment(
@@ -206,9 +235,9 @@ export default function HomeScreen({
                     )}`,
                     "hh:mm DD/MM/YYYY"
                   ).format("hh:mm a")}
-                  action={() => setSelectedTime(index)}
-                  selected={selectedTime == index}
-                  key={index}
+                  action={() => handleSelectTime(id)}
+                  selected={selectedTime == id}
+                  key={id}
                   disabled={moment(
                     `${slotStartTime} ${moment(date.value).format(
                       "DD/MM/YYYY"
@@ -234,7 +263,7 @@ export default function HomeScreen({
             action={handleBook}
             disabled={!user.id || selectedTime == null}
           />
-          {bookingInfo ? (
+          {bookings?.length ? (
             <UnderlineButton
               text="View My Bookings"
               action={handleViewBooking}
